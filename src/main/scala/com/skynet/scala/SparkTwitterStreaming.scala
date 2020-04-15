@@ -3,7 +3,7 @@ package com.skynet.scala
 import org.apache.log4j.{Level, Logger}
 
 import org.apache.spark.streaming.{Seconds, StreamingContext}
-import org.apache.spark.streaming.twitter._
+//import org.apache.spark.streaming.twitter._
 import org.apache.spark.SparkConf
 
 /**
@@ -45,7 +45,7 @@ object SparkTwitterStreaming {
     }*/
 
     val ssc = new StreamingContext(sparkConf, Seconds(10))
-    val stream = TwitterUtils.createStream(ssc, None, filters)
+   /* val stream = TwitterUtils.createStream(ssc, None, filters)
 
     val hashTags = stream.flatMap(status => status.getText.split(" ").filter(_.startsWith("#logan")))
 
@@ -53,25 +53,25 @@ object SparkTwitterStreaming {
                      .map{case (topic, count) => (count, topic)}
                      .transform(_.sortByKey(false))
 
-   /* val topCounts10 = hashTags.map((_, 1)).reduceByKeyAndWindow(_ + _, Seconds(10))
+    val topCounts10 = hashTags.map((_, 1)).reduceByKeyAndWindow(_ + _, Seconds(10))
                      .map{case (topic, count) => (count, topic)}
                      .transform(_.sortByKey(false))
-*/
+
 
     // Print popular hashtags
-    /*topCounts60.foreachRDD(rdd => {
+    topCounts60.foreachRDD(rdd => {
       val topList = rdd.take(10)
       println("\nPopular topics in last 60 seconds (%s total):".format(rdd.count()))
       topList.foreach{case (count, tag) => println("%s (%s tweets)".format(tag, count))}
-    })*/
+    })
      topCounts60.foreachRDD(rdd => rdd.coalesce(1, true).saveAsTextFile("G://Alienware-Files//BOFA//Input//loganstreaming"))
 
-   /* topCounts10.foreachRDD(rdd => {
+    topCounts10.foreachRDD(rdd => {
       val topList = rdd.take(10)
       println("\nPopular topics in last 10 seconds (%s total):".format(rdd.count()))
       topList.foreach{case (count, tag) => println("%s (%s tweets)".format(tag, count))}
-    })*/
-
+    })
+*/
     ssc.start();
     ssc.awaitTermination();
     ssc.stop(true);
